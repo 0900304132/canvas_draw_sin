@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>画正弦曲线</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="400">
+        not support
+    </canvas>
+</body>
+<script>
+var point = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        speed: 0.1,
+        initY: 0,
+        scaleX: 50,
+        strokeStyle: '#000000',
+    },
+    content,
+    halfHeight = 0;
+
+window.onload = function() {
+    //初始画布
+    var canvas = document.getElementById('canvas');
+    content = canvas.getContext("2d");
+    content.clearRect(0, 0, canvas.width, canvas.height);
+    point.width = canvas.width;
+    point.height = canvas.height;
+    content.translate(0, Math.floor(point.height / 2));
+    //初始路径
+    initPoint();
+    //画图
+    draw();
+};
+
+// requestAnimationFrame的向下兼容处理
+if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(fn) {
+        setTimeout(fn, 17);
+    };
+}
+
+function draw() {
+    content.lineTo(point.x * point.scaleX, point.y);
+    content.stroke();
+    if ((point.x * point.scaleX > point.width) || point.x < 0) {
+        initPoint();
+    }
+    point.y = Math.sin(point.x * Math.PI) * point.scaleY;
+    point.x += point.speed;
+
+    window.requestAnimationFrame(draw);
+}
+
+function randomColor() {
+    return '#' + (Math.random() * 0xffffff << 0).toString(16);
+}
+
+function initPoint() {
+    point.scaleX = Math.ceil(Math.random() * 100);
+    point.scaleY = Math.ceil(Math.random() * 100);
+    point.strokeStyle = randomColor();
+    point.x = point.y = 0;
+
+    content.beginPath();
+    content.strokeStyle = point.strokeStyle;
+    content.moveTo(0, 0);
+    console.log(point);
+}
+</script>
+
+</html>
